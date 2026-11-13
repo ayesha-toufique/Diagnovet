@@ -1,0 +1,14 @@
+Workspace Path:
+D:\Diagnovet
+
+Python Command:
+D:\Diagnovet\venv\Scripts\python.exe
+
+Pip Install Command:
+$env:TEMP='D:\Diagnovet\temp'; $env:TMP='D:\Diagnovet\temp'; $env:PIP_CACHE_DIR='D:\Diagnovet\pip-cache'; D:\Diagnovet\venv\Scripts\python.exe -m pip install --cache-dir D:\Diagnovet\pip-cache <package_name>
+
+Streamlit Run Command:
+D:\Diagnovet\venv\Scripts\python.exe -m streamlit run app.py
+
+Pytest Command:
+D:\Diagnovet\venv\Scripts\python.exe -m pytest
