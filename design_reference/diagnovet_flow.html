@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lagoon">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diagnovet — Guided Health Assessment</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+[data-theme=aurora]{--bg:#0F0B24;--card:#1A1438;--text:#F2EEFF;--muted:#A59CC9;--line:#2D2557;--g:linear-gradient(135deg,#00E5C3,#7B5CFF 55%,#FF5FA2);--a:#7B5CFF;--glow:0 8px 30px #7b5cff55}
+[data-theme=lagoon]{--bg:#E8FAF6;--card:#FFFFFF;--text:#0B2F3A;--muted:#5C8089;--line:#CBEBE4;--g:linear-gradient(135deg,#00C9A7,#2E7DFF 55%,#8A5CFF);--a:#2E7DFF;--glow:0 8px 26px #2e7dff40}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:.3s}
+.app{display:flex;min-height:100vh}
+aside{width:240px;padding:22px 14px;background:var(--card);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow:auto;flex-shrink:0;display:flex;flex-direction:column}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;margin:0 8px 20px}
+.logo i{width:38px;height:38px;border-radius:12px;background:var(--g);display:grid;place-items:center;font-style:normal;box-shadow:var(--glow)}
+.logo b{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav button{display:flex;width:100%;gap:10px;align-items:center;padding:9px 12px;margin-bottom:3px;border:0;border-radius:12px;background:none;color:var(--muted);font-size:13.5px;cursor:pointer;text-align:left}
+nav button:hover{background:var(--line);color:var(--text)}
+nav button.on{background:var(--g);color:#fff;font-weight:600;box-shadow:var(--glow)}
+nav button.lk{opacity:.45}
+.rs{margin-top:auto}
+main{flex:1;min-width:0;padding:22px 28px 30px;max-width:1100px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:10px}
+.themes{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.dot{width:26px;height:26px;border-radius:50%;border:3px solid var(--card);cursor:pointer;outline:2px solid var(--line)}.dot.on{outline:2px solid var(--a)}
+.back{border:1.5px solid var(--line);background:var(--card);color:var(--text);width:38px;height:38px;border-radius:12px;cursor:pointer;font-size:18px}
+.back:hover{border-color:var(--a);box-shadow:var(--glow)}
+.hero{border-radius:26px;padding:38px;background:var(--g);color:#fff;position:relative;overflow:hidden;box-shadow:var(--glow)}
+.hero:after{content:"🐾";position:absolute;right:20px;bottom:-30px;font-size:190px;opacity:.15;transform:rotate(-15deg)}
+.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.1;margin-bottom:10px;max-width:560px}.hero p{max-width:520px;opacity:.92;margin-bottom:20px}
+.btn{border:0;border-radius:14px;padding:12px 22px;font-weight:700;font-size:14px;color:#fff;background:var(--g);cursor:pointer;box-shadow:var(--glow);transition:.2s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn.w{background:#fff;color:#222;box-shadow:0 6px 20px #0003}
+.btn.o{background:none;color:var(--text);border:1.5px solid var(--line);box-shadow:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:16px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;transition:.2s}
+.card.h:hover{transform:translateY(-4px);box-shadow:var(--glow);border-color:var(--a);cursor:pointer}.card.sel{border-color:var(--a);box-shadow:var(--glow)}
+.ico{width:46px;height:46px;border-radius:14px;background:var(--g);display:grid;place-items:center;font-size:22px;margin-bottom:12px}
+h3{font-size:17px;margin-bottom:6px}.m{color:var(--muted);font-size:13.5px;line-height:1.5}
+.sec{font-size:20px;font-weight:800;margin:24px 0 4px}.pt{font-size:26px;font-weight:800}
+.badge{display:inline-block;padding:4px 11px;border-radius:99px;font-size:11.5px;font-weight:700;color:#fff}
+.red{background:#E5484D}.amb{background:#E69B28}.grn{background:#27966F}.blu{background:var(--a)}
+.demo{display:inline-block;background:repeating-linear-gradient(45deg,#E5484D,#E5484D 10px,#c53a3f 10px,#c53a3f 20px);color:#fff;font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px;margin:8px 0 14px}
+label{font-size:13px;font-weight:600;display:block;margin:14px 0 5px}
+input,select,textarea{width:100%;padding:11px 13px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--a);box-shadow:var(--glow)}
+.err{color:#E5484D;font-size:12.5px;margin-top:4px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.steps{display:flex;gap:6px;margin:6px 0 4px}.steps span{flex:1;height:8px;border-radius:9px;background:var(--line)}.steps span.on{background:var(--g)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{padding:10px 16px;border-radius:99px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:14px;color:var(--text)}
+.chip:hover{border-color:var(--a)}.chip.on{background:var(--g);color:#fff;border-color:transparent}
+.q{padding:14px 0;border-bottom:1px dashed var(--line)}.q:last-child{border:0}
+.seg{display:inline-flex;border-radius:12px;overflow:hidden;border:1.5px solid var(--line);margin-top:8px}
+.seg button{border:0;padding:8px 16px;background:none;color:var(--muted);cursor:pointer;font-size:13px}.seg button.on{background:var(--g);color:#fff;font-weight:700}
+.alert{background:#E5484D22;border:1.5px solid #E5484D;border-radius:14px;padding:14px;margin:14px 0;font-size:14px}
+.bar{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin:6px 0 12px}.bar i{display:block;height:100%;background:var(--g);border-radius:9px}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}summary{cursor:pointer;font-weight:600}
+.nav2{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px}.kv:last-child{border:0}.kv span:first-child{color:var(--muted)}
+.lnk{background:none;border:0;color:var(--a);font-weight:600;cursor:pointer;font-size:13px}
+.ov{position:fixed;inset:0;background:#0008;display:grid;place-items:center;z-index:20;padding:20px}.ov .card{max-width:380px;width:100%}
+footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);text-align:center}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:12px 22px;border-radius:14px;font-weight:600;box-shadow:var(--glow);z-index:30}
+@media(max-width:820px){
+.app{flex-direction:column}
+aside{position:fixed;bottom:0;left:0;right:0;top:auto;width:100%;height:auto;z-index:5;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));border-right:0;border-top:1px solid var(--line);overflow-x:auto}
+.logo,.rs{display:none}nav{display:flex;gap:4px}nav button{flex-direction:column;font-size:10px;padding:7px 10px;width:auto;white-space:nowrap}
+main{padding:14px 14px 100px}.two{grid-template-columns:1fr}.hero{padding:26px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside><div class="logo"><i>🐾</i><b>Diagnovet</b></div><nav id="nav"></nav><button class="btn o rs" onclick="ask('Restart this assessment? Your current answers will be cleared.',()=>{reset();go('pet')})">↺ Restart assessment</button></aside>
+<main>
+<div class="top"><div id="bk"></div><div class="themes">Theme
+<span class="dot" data-t="aurora" style="background:linear-gradient(135deg,#00E5C3,#7B5CFF,#FF5FA2)"></span>
+<span class="dot" data-t="lagoon" style="background:linear-gradient(135deg,#00C9A7,#2E7DFF,#8A5CFF)"></span></div></div>
+<div id="view"></div>
+<footer>© Diagnovet — a decision-support tool, not a replacement for a qualified veterinarian. Nothing is saved after you close the assessment.</footer>
+</main></div>
+<div id="ov"></div>
+<script>
+const $=s=>document.querySelector(s);
+const P=[["home","🏠","Home"],["pet","🐾","Pet Information"],["q","🩺","Assessment"],["review","📝","Review Answers"],["cond","🧪","Possible Conditions"],["care","⚖️","Care Guidance"],["support","📊","Decision Support"],["summary","📄","Final Summary"],["about","ℹ️","About"],["safety","🛡️","Safety"]];
+const BR={Dog:["Labrador Retriever","German Shepherd","Golden Retriever","Bulldog","Pomeranian","Other / Mixed Breed"],Cat:["Persian","Siamese","British Shorthair","Maine Coon","Domestic Shorthair","Other / Mixed Breed"]};
+const SYM={Dog:["Vomiting","Diarrhoea","Itching","Coughing","Limping","Low appetite"],Cat:["Vomiting","Sneezing","Straining to urinate","Hair loss","Low appetite","Hiding more"]};
+const FU={"Vomiting":["Has it happened more than twice today?","Is there blood in the vomit?"],"Diarrhoea":["Is the stool watery?","Is there blood or mucus in it?"],"Itching":["Is the skin red or sore?","Have you seen fleas?"],"Coughing":["Is the cough worse at night?","Does your pet gag after coughing?"],"Limping":["Is the leg held off the ground?","Is there swelling?"],"Low appetite":["Is your pet also drinking less?","Has this lasted more than a day?"],"Sneezing":["Is there eye or nose discharge?","Does sneezing happen often?"],"Straining to urinate":["Is little or no urine coming out?","Is there blood in the urine?"],"Hair loss":["Are there bald patches?","Is the skin flaky?"],"Hiding more":["Has the behaviour changed suddenly?","Is your pet eating less?"]};
+const EM=["Trouble breathing, or blue or pale gums?","Collapse or a seizure?","Possibly swallowed poison or a toxic item?"];
+const CO={"Vomiting":["Stomach upset","Ate something unusual","Gut infection"],"Diarrhoea":["Diet-change upset","Gut infection","Intestinal worms"],"Itching":["Skin allergy","Fleas or mites","Dry skin"],"Coughing":["Kennel cough","Airway irritation","Heart-related cough"],"Limping":["Muscle strain","Joint pain","Paw injury"],"Low appetite":["Mild stomach upset","Dental discomfort","General illness"],"Sneezing":["Cat flu","Airway irritation","Allergy"],"Straining to urinate":["Urinary infection","Bladder stones","Urinary blockage"],"Hair loss":["Skin allergy","Fleas or mites","Stress grooming"],"Hiding more":["Stress","Pain","General illness"]};
+const DEC=[["🚨","Get Help Now","red","Critical","Go to an emergency vet immediately.",["Call the nearest emergency vet and tell them you are on the way.","Keep your pet calm and warm.","Do not give food, water or any medicine."]],["🏥","Visit Vet Today","amb","High","Your pet should be seen by a vet today.",["Call a vet clinic and ask for a same-day visit.","Note when the signs started.","Do not give human medicines."]],["📅","Book a Vet Visit","blu","Medium","A vet visit in the next few days is a good idea.",["Book an appointment this week.","Write down any changes you see.","Make sure fresh water is available."]],["🏡","Home Care & Monitor","grn","Low","Watch your pet closely at home for now.",["Keep your pet comfortable and rested.","Check again in 24 hours.","Book a vet visit if signs get worse."]]];
+let S,H=[],lock=0;
+function reset(){S={page:"home",sp:"",breed:"",age:"",gen:"",wt:"",bg:"",syms:[],ans:{},dur:"",sev:"",frq:"",em:{},qs:2,qdone:0,sub:0,err:{}};H=[]}reset();
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+function ask(msg,fn){$("#ov").innerHTML=`<div class="ov"><div class="card"><h3>Are you sure?</h3><p class="m">${msg}</p><div class="nav2"><button class="btn o" onclick="$('#ov').innerHTML=''">Cancel</button><button class="btn" id="yes">Yes, continue</button></div></div></div>`;$("#yes").onclick=()=>{$("#ov").innerHTML="";fn()}}
+const petOK=()=>S.sp&&S.breed&&S.gen&&S.age!==""&&+S.age>=0&&+S.age<=30;
+const unl=p=>["home","pet","about","safety"].includes(p)||(p=="q"&&petOK())||(p=="review"&&S.qdone)||(S.sub&&["cond","care","support","summary"].includes(p));
+function go(p,back){if(!unl(p)){toast("Please finish the earlier steps first");return}if(!back&&p!=S.page)H.push(S.page);S.page=p;render();scrollTo(0,0)}
+function bk(){const p=H.pop();if(p){S.page=p;render()}}
+function once(f){if(lock)return;lock=1;setTimeout(()=>lock=0,600);f()}
+const prim=()=>S.syms[0];
+function R(){const yes=Object.values(S.ans).filter(a=>a=="Yes").length,l=(CO[prim()]||[]).slice(0,3),sc=[Math.min(88,60+yes*5),Math.min(70,46+yes*3),28];
+const sup=[...S.syms,...Object.entries(S.ans).filter(e=>e[1]=="Yes").map(e=>FU[e[0].split("|")[0]][+e[0].split("|")[1]])];
+const mis=Object.entries(S.ans).filter(e=>e[1]=="Not Sure").map(e=>FU[e[0].split("|")[0]][+e[0].split("|")[1]]);
+const emg=Object.values(S.em).includes("Yes");const d=emg?0:S.sev=="Severe"?1:S.sev=="Moderate"?2:3;
+return{l,sc,sup,mis,emg,d}}
+function head(t,sub){return `<div class="pt">${t}</div><p class="m">${sub||""}</p>`}
+function prog(n){return `<div class="m" style="margin-top:14px"><b>Step ${n} of 6</b></div><div class="steps">${[1,2,3,4,5,6].map(i=>`<span class="${i<=n?"on":""}"></span>`).join("")}</div>`}
+function Qrow(k,q,i){const a=S.ans[k];return `<div class="q"><b>${i}. ${q}</b><br><div class="seg">${["Yes","No","Not Sure"].map(x=>`<button class="${a==x?"on":""}" onclick="S.ans['${k}']='${x}';render()">${x}</button>`).join("")}</div></div>`}
+function EMrow(i){const a=S.em[i];return `<div class="q"><b>${i+1}. ${EM[i]}</b><br><div class="seg">${["Yes","No","Not Sure"].map(x=>`<button class="${a==x?"on":""}" onclick="S.em[${i}]='${x}';render()">${x}</button>`).join("")}</div></div>`}
+const V={
+home:()=>`<div class="hero"><span class="badge" style="background:#fff3;margin-bottom:14px">✨ Guided Pet Health Assessment</span><h1>Smarter Pet Health Decisions, One Consultation at a Time.</h1><p>Tell us about your cat or dog, answer a few simple questions, and get possible conditions with clear advice on what to do next.</p><button class="btn w" onclick="go('pet')">Start Health Assessment →</button></div>
+<div class="sec">Who is this assessment for?</div><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))"><div class="card h" onclick="S.sp='Dog';go('pet')"><div class="ico">🐶</div><h3>Dog</h3><p class="m">Stomach, skin, cough and mobility concerns.</p></div><div class="card h" onclick="S.sp='Cat';go('pet')"><div class="ico">🐱</div><h3>Cat</h3><p class="m">Urinary, sneezing, coat and behaviour concerns.</p></div></div>
+<div class="sec">How it works</div><div class="grid">${[["🐾","Tell us about your pet"],["🩺","Answer simple questions"],["🧪","See possible conditions"],["⚖️","Get care guidance"]].map((x,i)=>`<div class="card"><div class="ico">${x[0]}</div><h3>${i+1}. ${x[1]}</h3></div>`).join("")}</div>
+<div class="alert">🚨 <b>Emergency?</b> Trouble breathing, collapse, seizures or suspected poison — contact a vet immediately.</div>
+<p class="m">Diagnovet shows <i>possible</i> conditions only. It is not a diagnosis and does not replace a vet.</p>`,
+pet:()=>{const e=S.err;return head("Pet Information","Basic details for this assessment only. Nothing is saved.")+prog(1)+`<div class="card"><label>Species</label><div class="chips">${["Dog","Cat"].map(s=>`<span class="chip ${S.sp==s?"on":""}" onclick="S.sp='${s}';S.breed='';render()">${s=="Dog"?"🐶":"🐱"} ${s}</span>`).join("")}</div>${e.sp?`<div class="err">${e.sp}</div>`:""}
+<div class="two"><div><label>Breed</label><select onchange="S.breed=this.value" ${S.sp?"":"disabled"}><option value="">${S.sp?"Choose a breed":"Choose species first"}</option>${(BR[S.sp]||[]).map(b=>`<option ${S.breed==b?"selected":""}>${b}</option>`).join("")}</select>${e.breed?`<div class="err">${e.breed}</div>`:""}</div>
+<div><label>Gender</label><select onchange="S.gen=this.value"><option value="">Choose</option>${["Male","Female"].map(g=>`<option ${S.gen==g?"selected":""}>${g}</option>`).join("")}</select>${e.gen?`<div class="err">${e.gen}</div>`:""}</div></div>
+<div class="two"><div><label>Age (years)</label><input type="number" min="0" max="30" step="0.5" value="${esc(S.age)}" oninput="S.age=this.value">${e.age?`<div class="err">${e.age}</div>`:""}</div><div><label>Weight in kg (optional)</label><input type="number" min="0.5" max="90" value="${esc(S.wt)}" oninput="S.wt=this.value">${e.wt?`<div class="err">${e.wt}</div>`:""}</div></div>
+<label>Medical background or allergies (optional)</label><textarea rows="3" oninput="S.bg=this.value">${esc(S.bg)}</textarea></div>
+<div class="nav2"><span></span><button class="btn" onclick="once(petNext)">Next →</button></div>`},
+q:()=>{const n=S.qs;let b="";
+if(n==2)b=`<h3>Which signs have you noticed?</h3><p class="m">You can choose more than one.</p><br><div class="chips">${SYM[S.sp].map(s=>`<span class="chip ${S.syms.includes(s)?"on":""}" onclick="tg('${s}')">${s}</span>`).join("")}</div>`;
+if(n==3){let i=0;b=`<h3>A few more questions</h3><p class="m">Based on what you selected.</p>`+S.syms.map(s=>FU[s].map((q,j)=>Qrow(s+"|"+j,q,++i)).join("")).join("")}
+if(n==4)b=`<h3>Timing and severity</h3><label>How long has this been going on?</label><select onchange="S.dur=this.value"><option value="">Choose</option>${["Less than 1 day","1–3 days","More than 3 days"].map(x=>`<option ${S.dur==x?"selected":""}>${x}</option>`).join("")}</select><label>How severe does it look?</label><div class="seg">${["Mild","Moderate","Severe"].map(x=>`<button class="${S.sev==x?"on":""}" onclick="S.sev='${x}';render()">${x}</button>`).join("")}</div><label>How often does it happen?</label><div class="seg">${["Once","Sometimes","Often"].map(x=>`<button class="${S.frq==x?"on":""}" onclick="S.frq='${x}';render()">${x}</button>`).join("")}</div>`;
+if(n==5)b=`<h3>Quick emergency check</h3><p class="m">Please answer all three.</p>${[0,1,2].map(EMrow).join("")}${Object.values(S.em).includes("Yes")?'<div class="alert">🚨 <b>This may be an emergency.</b> Please contact a vet right away. You can still continue to see guidance.</div>':""}`;
+return head("Health Assessment","Questions are chosen for your "+S.sp.toLowerCase()+".")+prog(n)+`<div class="card">${b}${S.err.q?`<div class="err">${S.err.q}</div>`:""}</div><div class="nav2"><button class="btn o" onclick="qPrev()">← Previous</button><button class="btn" onclick="once(qNext)">${n==5?"Review answers →":"Next →"}</button></div><div style="margin-top:14px"><button class="lnk" onclick="ask('Cancel this assessment? Your answers will be cleared.',()=>{reset();go('home')})">Cancel assessment</button></div>`},
+review:()=>{const ed=n=>`<button class="lnk" onclick="S.qs=${n};S.page='q';render()">Edit</button>`;let i=0;
+return head("Review Your Answers","Check everything, or tap Edit to fix an answer.")+prog(6)+`<div class="card"><h3>Pet ${""}<button class="lnk" onclick="go('pet')">Edit</button></h3><div class="kv"><span>Species</span><b>${S.sp}</b></div><div class="kv"><span>Breed</span><b>${esc(S.breed)}</b></div><div class="kv"><span>Gender · Age</span><b>${S.gen} · ${esc(S.age)} yrs</b></div></div><br>
+<div class="card"><h3>Signs noticed ${ed(2)}</h3><p class="m">${S.syms.join(", ")}</p></div><br>
+<div class="card"><h3>Follow-up answers ${ed(3)}</h3>${S.syms.map(s=>FU[s].map((q,j)=>`<div class="kv"><span>${q}</span><b>${S.ans[s+"|"+j]}</b></div>`).join("")).join("")}</div><br>
+<div class="card"><h3>Timing ${ed(4)}</h3><div class="kv"><span>Duration</span><b>${S.dur}</b></div><div class="kv"><span>Severity</span><b>${S.sev}</b></div><div class="kv"><span>Frequency</span><b>${S.frq}</b></div></div>
+<div class="nav2"><button class="btn o" onclick="S.qs=5;go('q',1)">← Previous</button><button class="btn" onclick="once(()=>{S.sub=1;go('cond')})">Show possible conditions →</button></div>`},
+cond:()=>{const r=R();return head("Possible Health Conditions","These are possibilities, not a diagnosis.")+`<span class="demo">SAMPLE PREVIEW — DESIGN DEMO ONLY</span>${r.emg?'<div class="alert">🚨 Emergency signs were reported. Please contact a vet immediately.</div>':""}`+r.l.map((c,i)=>`<details ${i==0?"open":""}><summary>${c} <span class="badge ${i==0?"amb":"grn"}" style="float:right">${i==0?"Most likely":"Possible"}</span></summary><div class="bar"><i style="width:${r.sc[i]}%"></i></div><p class="m"><b>Matches:</b> ${r.sup.slice(0,3).join("; ")}.<br><b>Not confirmed:</b> ${r.mis.length?r.mis.slice(0,2).join("; "):"Signs only a vet can check."}</p></details>`).join("")+`<p class="m">Only a qualified veterinarian can diagnose your pet.</p><div class="nav2"><button class="btn o" onclick="bk()">← Back</button><button class="btn" onclick="go('care')">See care guidance →</button></div>`},
+care:()=>{const r=R(),d=DEC[r.d];return head("Care Guidance","What we suggest you do next.")+`<span class="demo">SAMPLE PREVIEW — DESIGN DEMO ONLY</span><div class="grid">${DEC.map((x,i)=>`<div class="card ${i==r.d?"sel":""}" style="${i==r.d?"":"opacity:.55"}"><div class="ico">${x[0]}</div><h3>${x[1]}</h3><span class="badge ${x[2]}">${x[3]}</span></div>`).join("")}</div><div class="card sel"><h3>${d[0]} ${d[1]}</h3><p class="m">${d[4]}</p></div><br>
+<details open><summary>Why this was suggested</summary><p class="m" style="margin-top:8px">${r.emg?"You reported an emergency sign.":"You reported "+S.sev.toLowerCase()+" signs lasting "+S.dur.toLowerCase()+", happening "+S.frq.toLowerCase()+"."} Main signs: ${S.syms.join(", ")}.</p></details>
+<details open><summary>What to do next</summary><p class="m" style="margin-top:8px">${d[5].map(x=>"• "+x).join("<br>")}</p></details>
+<div class="nav2"><button class="btn o" onclick="bk()">← Back</button><button class="btn" onclick="go('support')">Compare options →</button></div>`},
+support:()=>{const r=R();return head("Decision Support","Compare the possibilities in plain language.")+`<span class="demo">SAMPLE PREVIEW — DESIGN DEMO ONLY</span><div class="card"><h3>How well each fits</h3>${r.l.map((c,i)=>`<p class="m">${c} — ${r.sc[i]}%</p><div class="bar"><i style="width:${r.sc[i]}%"></i></div>`).join("")}</div><br><div class="grid" style="grid-template-columns:1fr 1fr"><div class="card"><h3>Severity</h3><span class="badge ${S.sev=="Severe"?"red":S.sev=="Moderate"?"amb":"grn"}">${S.sev}</span></div><div class="card"><h3>Urgency</h3><span class="badge ${DEC[r.d][2]}">${DEC[r.d][3]}</span></div></div>
+<div class="card" style="overflow:auto"><table style="width:100%;font-size:13.5px;border-collapse:collapse"><tr style="color:var(--muted);text-align:left"><th>Possibility</th><th>Fits</th><th>Not confirmed</th></tr>${r.l.map((c,i)=>`<tr><td style="padding:9px 0;border-top:1px solid var(--line)">${c}</td><td style="border-top:1px solid var(--line)">${i==0?r.sup.length:Math.max(1,r.sup.length-i)}</td><td style="border-top:1px solid var(--line)">${r.mis.length+i}</td></tr>`).join("")}</table></div>
+<p class="m" style="margin-top:12px">Other possibilities stay on the list because some signs are still unconfirmed.</p><div class="nav2"><button class="btn o" onclick="bk()">← Back</button><button class="btn" onclick="go('summary')">Final summary →</button></div>`},
+summary:()=>{const r=R(),d=DEC[r.d];return head("Final Assessment Summary","For this session only.")+`<div class="card"><h3>Pet</h3><div class="kv"><span>Species · Breed</span><b>${S.sp} · ${esc(S.breed)}</b></div><div class="kv"><span>Gender · Age</span><b>${S.gen} · ${esc(S.age)} yrs</b></div></div><br><div class="card"><h3>Signs and answers</h3><p class="m">${r.sup.join("; ")}</p></div><br><div class="card"><h3>Possible conditions</h3><p class="m">${r.l.join(" · ")}</p></div><br><div class="card sel"><h3>${d[0]} ${d[1]}</h3><p class="m">${d[4]}</p></div>
+<div class="alert">⚠️ These are possible conditions, not a diagnosis. Do not give medicines without a vet’s advice.</div>
+<div class="nav2"><button class="btn o" onclick="ask('End this assessment? All entered information will be cleared.',()=>{reset();go('home');toast('Assessment ended')})">End assessment</button><button class="btn" onclick="ask('Start a new assessment? The current one will be cleared.',()=>{reset();go('pet')})">Start new assessment</button></div>`},
+about:()=>T("About Diagnovet",["Diagnovet is a guided veterinary decision-support tool for cats and dogs.","It asks simple questions and shows possible conditions with clear advice.","It never replaces a qualified veterinarian."]),
+safety:()=>T("Safety & Disclaimer",["Results are possible conditions, not confirmed diagnoses.","Emergency signs need immediate professional help.","No medicines, doses or home remedies are given.","Your answers are not saved after the assessment."])};
+function T(t,a){return head(t)+a.map(x=>`<div class="card" style="margin-top:12px"><p>${x}</p></div>`).join("")}
+function tg(s){const i=S.syms.indexOf(s);i<0?S.syms.push(s):S.syms.splice(i,1);S.err={};render()}
+function petNext(){const e={};if(!S.sp)e.sp="Please choose Dog or Cat.";if(!S.breed)e.breed="Please choose a breed.";if(!S.gen)e.gen="Please choose a gender.";
+if(S.age===""||isNaN(S.age)||+S.age<0||+S.age>30)e.age="Enter an age from 0 to 30.";if(S.wt!==""&&(isNaN(S.wt)||+S.wt<0.5||+S.wt>90))e.wt="Enter a weight from 0.5 to 90 kg.";
+S.err=e;if(Object.keys(e).length){render();return}S.qs=2;go("q")}
+function qPrev(){S.err={};if(S.qs==2){bk()}else{S.qs--;render()}}
+function qNext(){const n=S.qs;let m="";
+if(n==2&&!S.syms.length)m="Choose at least one sign to continue.";
+if(n==3&&S.syms.some(s=>FU[s].some((q,j)=>!S.ans[s+"|"+j])))m="Please answer every question.";
+if(n==4&&!(S.dur&&S.sev&&S.frq))m="Please choose duration, severity and frequency.";
+if(n==5&&[0,1,2].some(i=>!S.em[i]))m="Please answer all three emergency questions.";
+S.err={q:m};if(m){render();return}if(n==5){S.qdone=1;go("review")}else{S.qs++;render()}}
+function render(){$("#nav").innerHTML=P.map(p=>`<button class="${S.page==p[0]?"on":""} ${unl(p[0])?"":"lk"}" onclick="go('${p[0]}')"><span>${p[1]}</span>${p[2]}${unl(p[0])?"":" 🔒"}</button>`).join("");
+$("#bk").innerHTML=S.page=="home"?"<b class='m'>Diagnovet</b>":`<button class="back" aria-label="Back" onclick="bk()">←</button>`;
+$("#view").innerHTML=V[S.page]();document.querySelectorAll(".dot").forEach(d=>d.classList.toggle("on",d.dataset.t==document.documentElement.dataset.theme))}
+document.querySelectorAll(".dot").forEach(d=>d.onclick=()=>{document.documentElement.dataset.theme=d.dataset.t;render()});
+render();
+</script>
+</body>
+</html>
